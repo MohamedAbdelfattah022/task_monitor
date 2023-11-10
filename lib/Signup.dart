@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
-import 'signup.dart';
+import 'package:task_monitor/Login.dart';
 
-class Login extends StatelessWidget {
+class SignUp extends StatelessWidget {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +19,11 @@ class Login extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.lock,
+                    Icons.person_add,
                     size: 120,
                   ),
                   Text(
-                    "Welcome back",
+                    "Create an Account",
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontSize: 18,
@@ -47,9 +46,10 @@ class Login extends StatelessWidget {
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      )),
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
                       border: OutlineInputBorder(),
                       fillColor: Colors.white,
                       filled: true,
@@ -62,43 +62,62 @@ class Login extends StatelessWidget {
                   TextField(
                     controller: passwordController,
                     decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
                         ),
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Colors.black,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.black,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.black,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: "Password",
+                    ),
+                    obscureText: true,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: confirmPasswordController,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
                         ),
-                        suffixIcon: Icon(
-                          Icons.remove_red_eye,
-                          color: Colors.black,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
                         ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: "Password"),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.black,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.black,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: "Confirm Password",
+                    ),
                     obscureText: true,
                   ),
                   SizedBox(
                     height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "Forgot Password?",
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ),
-                    ],
                   ),
                   Container(
                     width: double.infinity,
@@ -108,16 +127,17 @@ class Login extends StatelessWidget {
                       color: Colors.black,
                     ),
                     child: MaterialButton(
-                      // color: Colors.black,
                       child: Text(
-                        "Submit",
+                        "Sign Up",
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
                         print(emailController.text);
                         print(passwordController.text);
+                        print(confirmPasswordController.text);
                         emailController.clear();
                         passwordController.clear();
+                        confirmPasswordController.clear();
                       },
                     ),
                   ),
@@ -127,15 +147,15 @@ class Login extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Don't have an account?"),
+                      Text("Already have an account?"),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SignUp()),
+                            MaterialPageRoute(builder: (context) => Login()),
                           );
                         },
-                        child: Text("Register Now"),
+                        child: Text("Log In"),
                       ),
                     ],
                   ),
