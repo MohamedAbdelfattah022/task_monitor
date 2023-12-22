@@ -1,26 +1,44 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'filecontents.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var selectedRole = '';
 
-  Future<bool> checkCredentials(String email, String password) async {
+  Future<bool> checkCredentials(
+      String email, String password, String role) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/credentials.txt');
+      final file = File('${directory.path}/${role}_data.txt');
 
       if (await file.exists()) {
         final lines = await file.readAsLines();
 
         for (var line in lines) {
-          final storedEmail = line.split(',')[0];
-          final storedPassword = line.split(',')[1];
+          final userData = line
+              .replaceAll('{', '')
+              .replaceAll('}', '')
+              .replaceAll('Employee', '')
+              .replaceAll('Manager', '')
+              .split(',');
+
+          final storedEmail = userData
+              .firstWhere((element) => element.contains('email'))
+              .split(':')[1]
+              .trim();
+          final storedPassword = userData
+              .firstWhere((element) => element.contains('password'))
+              .split(':')[1]
+              .trim();
 
           if (email == storedEmail && password == storedPassword) {
             return true;
@@ -75,9 +93,10 @@ class Login extends StatelessWidget {
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                      )),
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
                       border: OutlineInputBorder(),
                       fillColor: Colors.white,
                       filled: true,
@@ -90,28 +109,56 @@ class Login extends StatelessWidget {
                   TextField(
                     controller: passwordController,
                     decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white,
                         ),
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Colors.black,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.remove_red_eye,
-                          color: Colors.black,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: "Password"),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        color: Colors.black,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.black,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: "Password",
+                    ),
                     obscureText: true,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Radio(
+                        value: 'Manager',
+                        groupValue: selectedRole,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRole = value.toString();
+                          });
+                        },
+                      ),
+                      Text('Manager'),
+                      Radio(
+                        value: 'Employee',
+                        groupValue: selectedRole,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRole = value.toString();
+                          });
+                        },
+                      ),
+                      Text('Employee'),
+                    ],
                   ),
                   SizedBox(
                     height: 10,
@@ -136,7 +183,6 @@ class Login extends StatelessWidget {
                       color: Colors.black,
                     ),
                     child: MaterialButton(
-                      // color: Colors.black,
                       child: Text(
                         "Submit",
                         style: TextStyle(color: Colors.white),
@@ -146,17 +192,25 @@ class Login extends StatelessWidget {
                         final enteredPassword = passwordController.text;
 
                         final validCredentials = await checkCredentials(
-                            enteredEmail, enteredPassword);
+                            enteredEmail, enteredPassword, selectedRole);
 
                         if (validCredentials) {
-                          // Navigate to the content page
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => FileContentsPage()),
+                              builder: (context) => FileContentsPage(
+                                role: selectedRole,
+                              ),
+                            ),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Login successful!'),
+                              duration: Duration(seconds: 2),
+                            ),
                           );
                         } else {
-                          // Show an error message
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -168,6 +222,7 @@ class Login extends StatelessWidget {
 
                         emailController.clear();
                         passwordController.clear();
+                        selectedRole = '';
                       },
                     ),
                   ),
@@ -182,7 +237,9 @@ class Login extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SignUp()),
+                            MaterialPageRoute(
+                              builder: (context) => SignUp(),
+                            ),
                           );
                         },
                         child: Text("Register Now"),
@@ -192,18 +249,31 @@ class Login extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-
-                  // Testing button to directly go to the content page
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to the content page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => FileContentsPage()),
+                          builder: (context) => FileContentsPage(
+                            role: 'Manager',
+                          ),
+                        ),
                       );
                     },
-                    child: Text('User Credentials (Testing)'),
+                    child: Text('Manager Credentials (Testing)'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FileContentsPage(
+                            role: 'Employee',
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Employee Credentials (Testing)'),
                   ),
                 ],
               ),

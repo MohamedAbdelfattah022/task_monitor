@@ -3,19 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FileContentsPage extends StatelessWidget {
-  Future<String> readFileContents() async {
+  final String role;
+
+  FileContentsPage({required this.role});
+
+  Future<List<String>> readFileContents() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/credentials.txt');
+      final file = File('${directory.path}/${role}_data.txt');
 
       if (await file.exists()) {
-        return await file.readAsString();
+        final lines = await file.readAsLines();
+        return lines;
       } else {
-        return 'File not found';
+        return ['File not found'];
       }
     } catch (e) {
       print('Error reading file contents: $e');
-      return 'Error reading file contents';
+      return ['Error reading file contents'];
     }
   }
 
@@ -25,7 +30,7 @@ class FileContentsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('File Contents'),
       ),
-      body: FutureBuilder<String>(
+      body: FutureBuilder<List<String>>(
         future: readFileContents(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,10 +38,16 @@ class FileContentsPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            final contents = snapshot.data ?? 'No contents';
+            final lines = snapshot.data ?? ['No contents'];
+
+            // Format the lines as needed
+            final formattedContents = lines
+                .map((line) => line.replaceAll('{', '').replaceAll('}', ''))
+                .join('\n');
+
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(contents),
+              child: Text(formattedContents),
             );
           }
         },

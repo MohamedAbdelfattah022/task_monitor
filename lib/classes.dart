@@ -5,11 +5,35 @@ class Person {
   late String _name;
   late String _email;
   late String _password;
-  late int _id;
+  // late int _id;
 
-  void login() {}
-  void logout() {}
-  void signup() {}
+  @override
+  String toString() {
+    return 'Person{name: $_name, email: $_email, password: $_password}';
+  }
+
+  // Getters
+  String getName() => _name;
+  String getEmail() => _email;
+  String getPassword() => _password;
+  // int getId() => _id;
+
+  // Setters
+  void setName(String name) {
+    _name = name;
+  }
+
+  void setEmail(String email) {
+    _email = email;
+  }
+
+  void setPassword(String password) {
+    _password = password;
+  }
+
+  // void setId(int id) {
+  //   _id = id;
+  // }
 }
 
 class Employee extends Person {
@@ -17,23 +41,51 @@ class Employee extends Person {
   late int _maxRequests;
   late String _managerName;
 
-  void showTasks() {}
-  void updateTask() {}
-  void checkTask() {}
-  void askForHelp() {}
-  void showRequests() {}
+  @override
+  String toString() {
+    return 'Employee{name: $_name, email: $_email, password: $_password}';
+  }
+
+  // Getters
+  List<Task> getRequests() => _requests;
+  int getMaxRequests() => _maxRequests;
+  String getManagerName() => _managerName;
+
+  // Setters
+  void setRequests(List<Task> requests) {
+    _requests = requests;
+  }
+
+  void setMaxRequests(int maxRequests) {
+    _maxRequests = maxRequests;
+  }
+
+  void setManagerName(String managerName) {
+    _managerName = managerName;
+  }
 }
 
 class Manager extends Person {
   late List<Project> _projects;
   late List<Employee> _employees;
 
-  void showProjects() {}
-  void editProject() {}
-  void showEmployees() {}
-  void assignTask() {}
-  void removeTask() {}
-  void editTask() {}
+  @override
+  String toString() {
+    return 'Manager{name: $_name, email: $_email, password: $_password}';
+  }
+
+  // Getters
+  List<Project> getProjects() => _projects;
+  List<Employee> getEmployees() => _employees;
+
+  // Setters
+  void setProjects(List<Project> projects) {
+    _projects = projects;
+  }
+
+  void setEmployees(List<Employee> employees) {
+    _employees = employees;
+  }
 }
 
 class Project {
@@ -45,6 +97,44 @@ class Project {
   late String _startTime;
   late String _deadline;
   late String _description;
+
+  // Getters
+  List<Task> getTasks() => _tasks;
+  List<Employee> getEmployees() => _employees;
+  Manager getManager() => _manager;
+  List<int> getProgressLevel() => _progressLevel;
+  String getStartTime() => _startTime;
+  String getDeadline() => _deadline;
+  String getDescription() => _description;
+
+  // Setters
+  void setTasks(List<Task> tasks) {
+    _tasks = tasks;
+  }
+
+  void setEmployees(List<Employee> employees) {
+    _employees = employees;
+  }
+
+  void setManager(Manager manager) {
+    _manager = manager;
+  }
+
+  void setProgressLevel(List<int> progressLevel) {
+    _progressLevel = progressLevel;
+  }
+
+  void setStartTime(String startTime) {
+    _startTime = startTime;
+  }
+
+  void setDeadline(String deadline) {
+    _deadline = deadline;
+  }
+
+  void setDescription(String description) {
+    _description = description;
+  }
 }
 
 class Task {
@@ -56,4 +146,47 @@ class Task {
   late String _startTime;
   late String _deadline;
   late String _description;
+
+  // Getters
+  String getName() => _name;
+  Project getProject() => _project;
+  List<int> getPriority() => _priority;
+  String getAssignerName() => _assignerName;
+  List<int> getProgressLevel() => _progressLevel;
+  String getStartTime() => _startTime;
+  String getDeadline() => _deadline;
+  String getDescription() => _description;
+
+  // Setters
+  void setName(String name) {
+    _name = name;
+  }
+
+  void setProject(Project project) {
+    _project = project;
+  }
+
+  void setPriority(List<int> priority) {
+    _priority = priority;
+  }
+
+  void setAssignerName(String assignerName) {
+    _assignerName = assignerName;
+  }
+
+  void setProgressLevel(List<int> progressLevel) {
+    _progressLevel = progressLevel;
+  }
+
+  void setStartTime(String startTime) {
+    _startTime = startTime;
+  }
+
+  void setDeadline(String deadline) {
+    _deadline = deadline;
+  }
+
+  void setDescription(String description) {
+    _description = description;
+  }
 }
