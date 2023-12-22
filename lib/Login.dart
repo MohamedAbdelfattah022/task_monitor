@@ -206,16 +206,39 @@ class _LoginState extends State<Login> {
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Login successful!'),
+                              content: Text(
+                                'Login successful!',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                ),
+                              ),
                               duration: Duration(seconds: 2),
+                              backgroundColor: Colors.green,
+                              elevation: 4.0,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  'Invalid credentials. Please try again.'),
+                                'Invalid credentials. Please try again.',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                ),
+                              ),
                               duration: Duration(seconds: 2),
+                              backgroundColor: Colors.red,
+                              elevation: 4.0,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           );
                         }

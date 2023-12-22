@@ -40,7 +40,6 @@ class FileContentsPage extends StatelessWidget {
           } else {
             final lines = snapshot.data ?? ['No contents'];
 
-            // Format the lines as needed
             final formattedContents = lines
                 .map((line) => line.replaceAll('{', '').replaceAll('}', ''))
                 .join('\n');
