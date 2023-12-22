@@ -2,10 +2,38 @@
 
 import 'package:flutter/material.dart';
 import 'signup.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'filecontents.dart';
 
 class Login extends StatelessWidget {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+
+  Future<bool> checkCredentials(String email, String password) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/credentials.txt');
+
+      if (await file.exists()) {
+        final lines = await file.readAsLines();
+
+        for (var line in lines) {
+          final storedEmail = line.split(',')[0];
+          final storedPassword = line.split(',')[1];
+
+          if (email == storedEmail && password == storedPassword) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    } catch (e) {
+      print('Error reading credentials: $e');
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +141,31 @@ class Login extends StatelessWidget {
                         "Submit",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        print(emailController.text);
-                        print(passwordController.text);
+                      onPressed: () async {
+                        final enteredEmail = emailController.text;
+                        final enteredPassword = passwordController.text;
+
+                        final validCredentials = await checkCredentials(
+                            enteredEmail, enteredPassword);
+
+                        if (validCredentials) {
+                          // Navigate to the content page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FileContentsPage()),
+                          );
+                        } else {
+                          // Show an error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Invalid credentials. Please try again.'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+
                         emailController.clear();
                         passwordController.clear();
                       },
@@ -138,6 +188,22 @@ class Login extends StatelessWidget {
                         child: Text("Register Now"),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+
+                  // Testing button to directly go to the content page
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the content page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FileContentsPage()),
+                      );
+                    },
+                    child: Text('User Credentials (Testing)'),
                   ),
                 ],
               ),

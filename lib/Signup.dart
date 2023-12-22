@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:task_monitor/Login.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'Login.dart';
 
 class SignUp extends StatelessWidget {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var confirmPasswordController = TextEditingController();
+
+  Future<void> saveCredentials(String email, String password) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/credentials.txt');
+      await file.writeAsString('$email,$password\n', mode: FileMode.append);
+      print('Credentials saved successfully.');
+    } catch (e) {
+      print('Error saving credentials: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,10 +144,15 @@ class SignUp extends StatelessWidget {
                         "Sign Up",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         print(emailController.text);
                         print(passwordController.text);
                         print(confirmPasswordController.text);
+
+                        // Save credentials to a file
+                        await saveCredentials(
+                            emailController.text, passwordController.text);
+
                         emailController.clear();
                         passwordController.clear();
                         confirmPasswordController.clear();
