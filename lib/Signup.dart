@@ -1,10 +1,34 @@
-import 'package:flutter/material.dart';
-import 'package:task_monitor/Login.dart';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-class SignUp extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'classes.dart';
+
+class SignUp extends StatefulWidget {
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  var nameController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
-  var confirmPasswordController = TextEditingController();
+  var selectedRole = 'manager';
+
+  Future<void> saveUserData(Person user) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final fileName = '${user.runtimeType}_data.txt';
+      final file = File('${directory.path}/$fileName');
+
+      await file.writeAsString('\n${user.toString()}', mode: FileMode.append);
+      print(user.toString());
+      print(user.runtimeType);
+    } catch (e) {
+      print('Error saving user data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +57,31 @@ class SignUp extends StatelessWidget {
                     height: 20,
                   ),
                   TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: Colors.black,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.white,
+                      )),
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: "Name",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -46,10 +95,9 @@ class SignUp extends StatelessWidget {
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
-                      ),
+                          borderSide: BorderSide(
+                        color: Colors.white,
+                      )),
                       border: OutlineInputBorder(),
                       fillColor: Colors.white,
                       filled: true,
@@ -62,59 +110,55 @@ class SignUp extends StatelessWidget {
                   TextField(
                     controller: passwordController,
                     decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.black,
-                      ),
-                      suffixIcon: Icon(
-                        Icons.remove_red_eye,
-                        color: Colors.black,
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: "Password",
-                    ),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Colors.black,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.black,
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: "Password"),
                     obscureText: true,
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
-                    controller: confirmPasswordController,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey,
-                        ),
+                  Row(
+                    children: [
+                      Radio(
+                        value: 'manager',
+                        groupValue: selectedRole,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRole = value.toString();
+                          });
+                        },
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
+                      Text('Manager'),
+                      Radio(
+                        value: 'employee',
+                        groupValue: selectedRole,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRole = value.toString();
+                          });
+                        },
                       ),
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.black,
-                      ),
-                      suffixIcon: Icon(
-                        Icons.remove_red_eye,
-                        color: Colors.black,
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: "Confirm Password",
-                    ),
-                    obscureText: true,
+                      Text('Employee'),
+                    ],
                   ),
                   SizedBox(
                     height: 10,
@@ -131,33 +175,27 @@ class SignUp extends StatelessWidget {
                         "Sign Up",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        print(emailController.text);
-                        print(passwordController.text);
-                        print(confirmPasswordController.text);
-                        emailController.clear();
-                        passwordController.clear();
-                        confirmPasswordController.clear();
+                      onPressed: () async {
+                        final enteredName = nameController.text;
+                        final enteredEmail = emailController.text;
+                        final enteredPassword = passwordController.text;
+
+                        Person user;
+                        if (selectedRole == 'manager') {
+                          user = Manager();
+                        } else {
+                          user = Employee();
+                        }
+
+                        user.setName(enteredName);
+                        user.setEmail(enteredEmail);
+                        user.setPassword(enteredPassword);
+
+                        await saveUserData(user);
+
+                        Navigator.pop(context);
                       },
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account?"),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Login()),
-                          );
-                        },
-                        child: Text("Log In"),
-                      ),
-                    ],
                   ),
                 ],
               ),
