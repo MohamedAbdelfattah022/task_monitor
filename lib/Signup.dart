@@ -22,7 +22,7 @@ class _SignUpState extends State<SignUp> {
       final fileName = '${user.runtimeType}_data.txt';
       final file = File('${directory.path}/$fileName');
 
-      await file.writeAsString('\n${user.toString()}', mode: FileMode.append);
+      await file.writeAsString('${user.toString()}\n', mode: FileMode.append);
       print(user.toString());
       print(user.runtimeType);
     } catch (e) {

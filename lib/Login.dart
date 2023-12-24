@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_monitor/manager.dart';
 import 'signup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -22,15 +23,17 @@ class _LoginState extends State<Login> {
 
       if (await file.exists()) {
         final lines = await file.readAsLines();
+        print('lines: ${lines}');
 
         for (var line in lines) {
+          print('line: ${line}');
           final userData = line
               .replaceAll('{', '')
               .replaceAll('}', '')
               .replaceAll('Employee', '')
               .replaceAll('Manager', '')
               .split(',');
-
+          print('userdata: ${userData}');
           final storedEmail = userData
               .firstWhere((element) => element.contains('email'))
               .split(':')[1]
@@ -41,6 +44,7 @@ class _LoginState extends State<Login> {
               .trim();
 
           if (email == storedEmail && password == storedPassword) {
+            print("FOUND");
             return true;
           }
         }
@@ -188,22 +192,30 @@ class _LoginState extends State<Login> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
-                        final enteredEmail = emailController.text;
-                        final enteredPassword = passwordController.text;
-
-                        final validCredentials = await checkCredentials(
+                        final String enteredEmail = emailController.text;
+                        final String enteredPassword = passwordController.text;
+                        print('email: ${enteredEmail}');
+                        print('password: ${enteredPassword}');
+                        final bool validCredentials = await checkCredentials(
                             enteredEmail, enteredPassword, selectedRole);
 
                         if (validCredentials) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FileContentsPage(
-                                role: selectedRole,
+                          if (selectedRole == 'Manager') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ManagerScene()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FileContentsPage(
+                                  role: selectedRole,
+                                ),
                               ),
-                            ),
-                          );
-
+                            );
+                          }
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -245,7 +257,10 @@ class _LoginState extends State<Login> {
 
                         emailController.clear();
                         passwordController.clear();
-                        selectedRole = '';
+                        // selectedRole = '';
+                        setState(() {
+                          selectedRole = '';
+                        });
                       },
                     ),
                   ),
