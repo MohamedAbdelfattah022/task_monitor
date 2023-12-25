@@ -90,13 +90,31 @@ class Manager extends Person {
 
 class Project {
   late String name;
+  late String _description;
   late List<Task> _tasks;
   late List<Employee> _employees;
   late Manager _manager;
   late List<int> _progressLevel = [1, 2, 3];
   late String _startTime;
   late String _deadline;
-  late String _description;
+
+  Project({
+    required String name,
+    required String description,
+    required List<Task> tasks,
+    required List<Employee> employees,
+    required Manager manager,
+    required String startTime,
+    required String deadline,
+  }) {
+    this.name = name;
+    this._description = description;
+    this._tasks = tasks;
+    this._employees = employees;
+    this._manager = manager;
+    this._startTime = startTime;
+    this._deadline = deadline;
+  }
 
   // Getters
   List<Task> getTasks() => _tasks;
@@ -106,6 +124,7 @@ class Project {
   String getStartTime() => _startTime;
   String getDeadline() => _deadline;
   String getDescription() => _description;
+  String getName() => name;
 
   // Setters
   void setTasks(List<Task> tasks) {
@@ -147,6 +166,26 @@ class Task {
   late String _deadline;
   late String _description;
 
+  Task({
+    required String name,
+    // required Project project,
+    required List<int> priority,
+    required String assignerName,
+    required List<int> progressLevel,
+    required String startTime,
+    required String deadline,
+    required String description,
+  }) {
+    _name = name;
+    // _project = project;
+    _priority = priority;
+    _assignerName = assignerName;
+    _progressLevel = progressLevel;
+    _startTime = startTime;
+    _deadline = deadline;
+    _description = description;
+  }
+
   // Getters
   String getName() => _name;
   Project getProject() => _project;
@@ -156,37 +195,4 @@ class Task {
   String getStartTime() => _startTime;
   String getDeadline() => _deadline;
   String getDescription() => _description;
-
-  // Setters
-  void setName(String name) {
-    _name = name;
-  }
-
-  void setProject(Project project) {
-    _project = project;
-  }
-
-  void setPriority(List<int> priority) {
-    _priority = priority;
-  }
-
-  void setAssignerName(String assignerName) {
-    _assignerName = assignerName;
-  }
-
-  void setProgressLevel(List<int> progressLevel) {
-    _progressLevel = progressLevel;
-  }
-
-  void setStartTime(String startTime) {
-    _startTime = startTime;
-  }
-
-  void setDeadline(String deadline) {
-    _deadline = deadline;
-  }
-
-  void setDescription(String description) {
-    _description = description;
-  }
 }
