@@ -9,8 +9,8 @@ class ManagerScene extends StatefulWidget {
 }
 
 class _ManagerSceneState extends State<ManagerScene> {
-  Manager manager = Manager.defaults(); // Updated to include a Manager object
-  List<Project> projects = []; // List to store projects
+  Manager manager = Manager.defaults();
+  List<Project> projects = [];
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +79,9 @@ class _ManagerSceneState extends State<ManagerScene> {
                 ],
               ),
               SizedBox(height: 20),
-              // Display existing projects
               for (Project project in projects)
                 GestureDetector(
                   onTap: () {
-                    // Navigate to tasks screen for the selected project
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -100,7 +98,6 @@ class _ManagerSceneState extends State<ManagerScene> {
     );
   }
 
-  // Function to show a dialog for adding a new project
   Future<void> _showAddProjectDialog(BuildContext context) async {
     TextEditingController projectNameController = TextEditingController();
     TextEditingController projectDescriptionController =
@@ -145,13 +142,12 @@ class _ManagerSceneState extends State<ManagerScene> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
               child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                // Create a new project and add it to the list
                 Project newProject = Project(
                   name: projectNameController.text,
                   description: projectDescriptionController.text,
@@ -163,13 +159,11 @@ class _ManagerSceneState extends State<ManagerScene> {
                 );
 
                 setState(() {
-                  manager
-                      .getProjects()
-                      .add(newProject); // Add project to manager's list
-                  projects.add(newProject); // Add project to the local list
+                  manager.getProjects().add(newProject);
+                  projects.add(newProject);
                 });
 
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
               child: Text('Add Project'),
             ),
