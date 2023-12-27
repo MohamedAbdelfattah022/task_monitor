@@ -37,14 +37,6 @@ class TaskCard extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           ),
           Text(
-            'Assigner: ${task.getAssignerName()}',
-            style: TextStyle(color: Colors.black),
-          ),
-          Text(
-            'Progress Level: ${task.getProgressLevel().join(", ")}',
-            style: TextStyle(color: Colors.black),
-          ),
-          Text(
             'Start Time: ${task.getStartTime()}',
             style: TextStyle(color: Colors.black),
           ),

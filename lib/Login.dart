@@ -27,12 +27,8 @@ class _LoginState extends State<Login> {
 
         for (var line in lines) {
           print('line: ${line}');
-          final userData = line
-              .replaceAll('{', '')
-              .replaceAll('}', '')
-              .replaceAll('Employee', '')
-              .replaceAll('Manager', '')
-              .split(',');
+          final userData =
+              line.replaceAll('{', '').replaceAll('}', '').split(',');
           print('userdata: ${userData}');
           final storedEmail = userData
               .firstWhere((element) => element.contains('email'))
@@ -257,7 +253,6 @@ class _LoginState extends State<Login> {
 
                         emailController.clear();
                         passwordController.clear();
-                        // selectedRole = '';
                         setState(() {
                           selectedRole = '';
                         });

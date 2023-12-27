@@ -5,8 +5,13 @@ class Person {
   late String _name;
   late String _email;
   late String _password;
-  // late int _id;
 
+  Person(
+      {required String name, required String email, required String password}) {
+    _name = name;
+    _email = email;
+    _password = password;
+  }
   @override
   String toString() {
     return 'Person{name: $_name, email: $_email, password: $_password}';
@@ -16,8 +21,6 @@ class Person {
   String getName() => _name;
   String getEmail() => _email;
   String getPassword() => _password;
-  // int getId() => _id;
-
   // Setters
   void setName(String name) {
     _name = name;
@@ -30,10 +33,6 @@ class Person {
   void setPassword(String password) {
     _password = password;
   }
-
-  // void setId(int id) {
-  //   _id = id;
-  // }
 }
 
 class Employee extends Person {
@@ -41,9 +40,15 @@ class Employee extends Person {
   late int _maxRequests;
   late String _managerName;
 
+  Employee(
+      {required String name, required String email, required String password})
+      : super(name: name, email: email, password: password);
+
+  Employee.defaults() : super(name: '', email: '', password: '');
+
   @override
   String toString() {
-    return 'Employee{name: $_name, email: $_email, password: $_password}';
+    return '{name: $_name, email: $_email, password: $_password}';
   }
 
   // Getters
@@ -66,12 +71,20 @@ class Employee extends Person {
 }
 
 class Manager extends Person {
-  late List<Project> _projects;
-  late List<Employee> _employees;
+  late List<Project> _projects = [];
+  late List<Employee> _employees = [];
+
+  Manager({
+    required String name,
+    required String email,
+    required String password,
+  }) : super(name: name, email: email, password: password);
+
+  Manager.defaults() : super(name: '', email: '', password: '');
 
   @override
   String toString() {
-    return 'Manager{name: $_name, email: $_email, password: $_password}';
+    return '{name: $_name, email: $_email, password: $_password}';
   }
 
   // Getters
@@ -168,7 +181,6 @@ class Task {
 
   Task({
     required String name,
-    // required Project project,
     required List<int> priority,
     required String assignerName,
     required List<int> progressLevel,
@@ -177,7 +189,6 @@ class Task {
     required String description,
   }) {
     _name = name;
-    // _project = project;
     _priority = priority;
     _assignerName = assignerName;
     _progressLevel = progressLevel;
@@ -185,7 +196,6 @@ class Task {
     _deadline = deadline;
     _description = description;
   }
-
   // Getters
   String getName() => _name;
   Project getProject() => _project;
