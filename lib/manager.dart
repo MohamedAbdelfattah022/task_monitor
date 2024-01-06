@@ -3,7 +3,15 @@ import 'classes.dart';
 import 'ProjectCard.dart';
 import 'TaskScreen.dart';
 
-class ManagerScene extends StatelessWidget {
+class ManagerScene extends StatefulWidget {
+  @override
+  _ManagerSceneState createState() => _ManagerSceneState();
+}
+
+class _ManagerSceneState extends State<ManagerScene> {
+  Manager manager = Manager.defaults();
+  List<Project> projects = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,66 +73,103 @@ class ManagerScene extends StatelessWidget {
                     ),
                     child: Text('Add a new project'),
                     onPressed: () {
-                      // add new project functionality
+                      _showAddProjectDialog(context);
                     },
                   ),
                 ],
               ),
               SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TasksScreen(
-                        project: Project(
-                          name: 'Project #1',
-                          description: 'This is the first project',
-                          tasks: [
-                            Task(
-                              name: 'Task 1',
-                              priority: [1],
-                              assignerName: 'Assigner 1',
-                              progressLevel: [1],
-                              startTime: 'Start Time 1',
-                              deadline: 'Deadline 1',
-                              description: 'Description 1',
-                            ),
-                            Task(
-                              name: 'Task 2',
-                              priority: [2],
-                              assignerName: 'Assigner 2',
-                              progressLevel: [2],
-                              startTime: 'Start Time 2',
-                              deadline: 'Deadline 2',
-                              description: 'Description 2',
-                            ),
-                          ],
-                          employees: [],
-                          manager: Manager(),
-                          startTime: 'Wednesday, 11 November 2023, 05 : 15 P.M',
-                          deadline: 'Thursday, 12 November 2023, 05 : 15 P.M',
-                        ),
+              for (Project project in projects)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TasksScreen(project: project),
                       ),
-                    ),
-                  );
-                },
-                child: ProjectCard(
-                  project: Project(
-                    name: 'Project #1',
-                    description: 'This is the first project',
-                    tasks: [],
-                    employees: [],
-                    manager: Manager(),
-                    startTime: 'Wednesday, 11 November 2023, 05 : 15 P.M',
-                    deadline: 'Thursday, 12 November 2023, 05 : 15 P.M',
-                  ),
+                    );
+                  },
+                  child: ProjectCard(project: project),
                 ),
-              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showAddProjectDialog(BuildContext context) async {
+    TextEditingController projectNameController = TextEditingController();
+    TextEditingController projectDescriptionController =
+        TextEditingController();
+    TextEditingController startTimeController = TextEditingController();
+    TextEditingController endTimeController = TextEditingController();
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add a New Project'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Project Name:'),
+              TextField(
+                controller: projectNameController,
+                decoration: InputDecoration(hintText: 'Enter project name'),
+              ),
+              SizedBox(height: 10),
+              Text('Project Description:'),
+              TextField(
+                controller: projectDescriptionController,
+                decoration:
+                    InputDecoration(hintText: 'Enter project description'),
+              ),
+              SizedBox(height: 10),
+              Text('Start Time:'),
+              TextField(
+                controller: startTimeController,
+                decoration: InputDecoration(hintText: 'Enter start time'),
+              ),
+              SizedBox(height: 10),
+              Text('End Time:'),
+              TextField(
+                controller: endTimeController,
+                decoration: InputDecoration(hintText: 'Enter end time'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Project newProject = Project(
+                  name: projectNameController.text,
+                  description: projectDescriptionController.text,
+                  tasks: [],
+                  employees: [],
+                  manager: manager,
+                  startTime: startTimeController.text,
+                  deadline: endTimeController.text,
+                );
+
+                setState(() {
+                  manager.getProjects().add(newProject);
+                  projects.add(newProject);
+                });
+
+                Navigator.pop(context);
+              },
+              child: Text('Add Project'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

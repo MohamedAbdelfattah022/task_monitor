@@ -182,14 +182,18 @@ class _SignUpState extends State<SignUp> {
 
                         Person user;
                         if (selectedRole == 'manager') {
-                          user = Manager();
+                          user = Manager(
+                            name: enteredName,
+                            email: enteredEmail,
+                            password: enteredPassword,
+                          );
                         } else {
-                          user = Employee();
+                          user = Employee(
+                            name: enteredName,
+                            email: enteredEmail,
+                            password: enteredPassword,
+                          );
                         }
-
-                        user.setName(enteredName);
-                        user.setEmail(enteredEmail);
-                        user.setPassword(enteredPassword);
 
                         await saveUserData(user);
 
